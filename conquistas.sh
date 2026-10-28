@@ -2,11 +2,29 @@
 # =============================================================================
 #  conquistas.sh — desbloqueia as conquistas fáceis do GitHub neste repositório
 #
-#  Conquistas:
-#    - Quickdraw            -> abre e fecha uma issue em menos de 5 minutos
-#    - YOLO                 -> faz merge de um PR sem review
-#    - Pull Shark           -> 2 PRs mergeados (nível base)
-#    - Pair Extraordinaire  -> PR mergeado com commit em coautoria (opcional)
+#  TODAS as conquistas do GitHub e se dá pra fazer sozinho:
+#
+#    AUTOMATIZÁVEIS (este script faz):
+#    - Quickdraw            -> fechar uma issue/PR até 5 min depois de abrir
+#    - YOLO                 -> fazer merge de um PR sem review
+#    - Pull Shark           -> PRs mergeados (2 bronze, 16 prata, 128 ouro, 1024)
+#    - Pair Extraordinaire  -> PR mergeado com commit em coautoria
+#                              (10 bronze, 24 prata, 48 ouro)
+#
+#    PRECISAM DE OUTRAS PESSOAS / DINHEIRO (não dá pra automatizar sozinho):
+#    - Starstruck           -> repositório com 16 estrelas (128, 512, 4096)
+#    - Galaxy Brain         -> 2 respostas aceitas no GitHub Discussions
+#                              (aceitas por outra pessoa)
+#    - Public Sponsor       -> patrocinar alguém pelo GitHub Sponsors
+#
+#    ENCERRADAS (não podem mais ser obtidas):
+#    - Arctic Code Vault Contributor (2020)
+#    - Mars 2020 Contributor
+#    - Developer Program Member (antigo selo de highlight)
+#
+#    NÃO LANÇADAS OFICIALMENTE (podem nunca aparecer):
+#    - Heart On Your Sleeve -> reagir com emoji (o script reage, por garantia)
+#    - Open Sourcerer       -> PRs mergeados em vários repositórios públicos
 #
 #  Requisitos:
 #    - git e GitHub CLI (gh) instalados   -> https://cli.github.com
@@ -27,7 +45,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --prs)     NUM_PRS="$2"; shift 2 ;;
     --coautor) COAUTOR="$2"; shift 2 ;;
-    -h|--help) sed -n '2,22p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,40p' "$0"; exit 0 ;;
     *) echo "Opção desconhecida: $1"; exit 1 ;;
   esac
 done
@@ -70,6 +88,7 @@ info "Quickdraw: abrindo e fechando uma issue"
 ISSUE_URL=$(gh issue create --repo "$REPO" \
   --title "Quickdraw $(date +%s)" \
   --body "Issue aberta e fechada automaticamente.")
+gh api -X POST "repos/$REPO/issues/${ISSUE_URL##*/}/reactions" -f content=heart >/dev/null || true
 gh issue close "$ISSUE_URL" --repo "$REPO" --comment "Fechada em segundos ⚡"
 ok "Issue fechada: $ISSUE_URL"
 
